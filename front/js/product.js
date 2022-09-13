@@ -27,5 +27,38 @@ async function main(){
         option.innerText = color
         couleur.appendChild(option)
     });
+
+
+    const bouton = document.querySelector('#addToCart')
+    bouton.addEventListener('click', () =>{
+        const quantity = document.querySelector('#quantity')
+
+        const cartItem = {
+            item : id,
+            couleur : couleur.value,
+            quantity : parseInt(quantity.value),
+        }
+        console.log(cartItem)
+        
+        const panier = JSON.parse(localStorage.getItem('panier')) || []
+
+        const ajouter = document.querySelector('.ajouter')
+        const article = document.querySelector('.anim')
+
+        const found = panier.find(element => element.item === cartItem.item)
+        if (found != undefined){
+            throw 'Produit déjà ajouté'
+        } else {
+            article.classList.add('ajouter')
+        }
+
+        if (cartItem.couleur && cartItem.quantity){
+            panier.push(cartItem)
+            localStorage.setItem('panier', JSON.stringify(panier))
+        } else {
+            throw 'Veuiller séléctionner une couleur et une quantité'
+        } 
+    })
+    
 }
 main()

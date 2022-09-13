@@ -90,7 +90,55 @@
 .item__content__addButton button:hover {
 	box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
 }
-
+.anim{
+	display: none;
+}
+.ajouter{
+	border: 0px solid black;
+	background-color: rgb(0, 228, 30);
+	color: white;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	justify-content: space-evenly;
+	align-items: center;
+	border-radius: 20px;
+	height: 37px;
+	width: 200px;
+	position: fixed;
+	right: 30px;
+	bottom: 20px;
+	animation: pop;
+	animation-duration: 5s;
+	transform: translate(0px, 60px);
+}
+.ajouter_logo{
+	font-size: 20px;
+}
+.ajouter_texte{
+	font-size: 16px;
+	font-weight: 600;
+}
+@keyframes pop {
+	0%{
+		opacity: 0;
+	}
+	20%{
+		opacity: 1;
+	}
+	30%{
+		transform: translate(0px);
+	}
+	70%{
+		transform: translate(0px);
+	}
+	75%{
+		opacity: 1;
+	}
+	100%{
+		opacity: 0;
+	}
+}
 
 
 
