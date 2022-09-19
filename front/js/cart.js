@@ -77,16 +77,27 @@ async function main() {
         document.querySelector('#cart__items').appendChild(templateElementNode)
         console.log(item)
     })
-    // preventDefault 
 
     // ----- PASSER COMMANDE ----- \\
 
     const form = document.querySelector('.cart__order__form')
     
-    form.addEventListener('submit', (e) => {    
+    // const validEmail = (inputEmail) => {
+    //     const emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}+[a-zA-Z0-9.-_]+[.]{1}+[a-z]{2,10}$', 'g')
+    //     const testEmail = emailRegExp.test(inputEmail.value)
+    //     if(testEmail == false){
+    //         erreur = "Veuillez renseigner une adresse mail correcte"
+    //     }
+    //     if(erreur) {
+    //         form.querySelector('#emailErrorMsg').innerText = erreur
+    //         e.preventDefault()
+    //     } 
+    // }
+
+    form.addEventListener('submit', async (e) => {    
         
         e.preventDefault()
-        let erreur;
+        let erreur = ""
         const firstName = form.querySelector('#firstName')
         const lastName = form.querySelector('#lastName')
         const address = form.querySelector('#address')
@@ -102,22 +113,36 @@ async function main() {
         }
         console.log(contact);
 
-        let products = {
-            id : ids,
-        }
-        console.log(products);
-
-        
-        if(!firstName.value) {
-            erreur = "Veuillez renseigner votre Prénom"
+        if(email.value == 'bonjour@a') {
+            erreur = "Veuillez renseigner un Email valide"
         }
         
         if(erreur) {
-            e.querySelector('#firstNameErrorMsg').innerText = erreur
-            return false
+            form.querySelector('#emailErrorMsg').innerText = erreur
+            e.preventDefault()
         }
-        // alert('Commande passé') 
+
+        const products = panier.reduce((products, cartItem) => {
+            for (let i = 0; i < cartItem.quantity; i++) {
+                products.push(cartItem.item)
+            }
+            return products
+        }, [])
+        console.log(products);
+
+        const response = await fetch('http://localhost:3000/api/products/order', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({contact, products})
+         })
+        const result = await response.json()
+        console.log(result);
         
+        const orderId = result.orderId
+        location.href=("href", "./confirmation.html?orderId=" + orderId)
     })
     
     
