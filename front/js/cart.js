@@ -17,24 +17,13 @@ async function main() {
     // ----- FUNCTION TOTAL ----- \\
 
     const computeTotal = () => {
-        const total = panier.reduce((total, element) => {
+        document.querySelector('#totalPrice').innerText = panier.reduce((totalPrice, element) => {
             const item = items[element.item]
-            total.price += item.price * element.quantity
-            total.quantity += element.quantity
-            return total
-        }, {
-            price: 0,
-            quantity: 0,
-        })
-        document.querySelector('#totalPrice').innerText = total.price
-        document.querySelector('#totalQuantity').innerText = total.quantity
-        // document.querySelector('#totalPrice').innerText = panier.reduce((totalPrice, element) => {
-        //     const item = items[element.item]
-        //     return totalPrice + item.price * element.quantity
-        // }, 0)
-        // document.querySelector('#totalQuantity').innerText = panier.reduce((totalQuantity, element) => {
-        //     return totalQuantity + element.quantity
-        // }, 0)
+            return totalPrice + item.price * element.quantity
+        }, 0)
+        document.querySelector('#totalQuantity').innerText = panier.reduce((totalQuantity, element) => {
+            return totalQuantity + element.quantity
+        }, 0)
     }
     computeTotal()
 
@@ -81,23 +70,10 @@ async function main() {
     // ----- PASSER COMMANDE ----- \\
 
     const form = document.querySelector('.cart__order__form')
-    
-    // const validEmail = (inputEmail) => {
-    //     const emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}+[a-zA-Z0-9.-_]+[.]{1}+[a-z]{2,10}$', 'g')
-    //     const testEmail = emailRegExp.test(inputEmail.value)
-    //     if(testEmail == false){
-    //         erreur = "Veuillez renseigner une adresse mail correcte"
-    //     }
-    //     if(erreur) {
-    //         form.querySelector('#emailErrorMsg').innerText = erreur
-    //         e.preventDefault()
-    //     } 
-    // }
 
     form.addEventListener('submit', async (e) => {    
         
         e.preventDefault()
-        let erreur = ""
         const firstName = form.querySelector('#firstName')
         const lastName = form.querySelector('#lastName')
         const address = form.querySelector('#address')
@@ -113,15 +89,7 @@ async function main() {
         }
         console.log(contact);
 
-        if(email.value == 'bonjour@a') {
-            erreur = "Veuillez renseigner un Email valide"
-        }
-        
-        if(erreur) {
-            form.querySelector('#emailErrorMsg').innerText = erreur
-            e.preventDefault()
-        }
-
+       
         const products = panier.reduce((products, cartItem) => {
             for (let i = 0; i < cartItem.quantity; i++) {
                 products.push(cartItem.item)
@@ -143,9 +111,7 @@ async function main() {
         
         const orderId = result.orderId
         location.href=("href", "./confirmation.html?orderId=" + orderId)
-    })
-    
-    
+    }) 
         
 }
 main()

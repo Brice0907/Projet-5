@@ -13,7 +13,6 @@ async function main(){
         itemNode.querySelector('.productLink').setAttribute("href", "./product.html?id=" + element._id)
         document.getElementById('items').appendChild(itemNode)
         console.log(element)
-    });
-    
+    })
 }
 main()

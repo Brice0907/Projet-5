@@ -41,20 +41,19 @@ async function main(){
         console.log(cartItem)
         
         const panier = JSON.parse(localStorage.getItem('panier')) || []
-
+        
         const ajouter = document.querySelector('.ajouter')
         const article = document.querySelector('.anim')
 
         const found = panier.find(element => element.item === cartItem.item)
         if (found != undefined){
             throw 'Produit déjà ajouté'
-        } else {
-            article.classList.add('ajouter')
         }
 
         if (cartItem.couleur && cartItem.quantity){
             panier.push(cartItem)
             localStorage.setItem('panier', JSON.stringify(panier))
+            article.classList.add('ajouter')
         } else {
             throw 'Veuiller séléctionner une couleur et une quantité'
         } 
