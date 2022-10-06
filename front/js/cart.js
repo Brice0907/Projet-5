@@ -71,8 +71,8 @@ async function main() {
 
     const form = document.querySelector('.cart__order__form')
 
-    form.addEventListener('submit', async (e) => {    
-        
+    form.addEventListener('submit', async (e) => {
+
         e.preventDefault()
         const firstName = form.querySelector('#firstName')
         const lastName = form.querySelector('#lastName')
@@ -81,37 +81,65 @@ async function main() {
         const email = form.querySelector('#email')
 
         let contact = {
-            firstName : firstName.value,
-            lastName : lastName.value,
-            address : address.value,
-            city : ville.value,
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: ville.value,
             email: email.value,
         }
-        console.log(contact);
 
-       
         const products = panier.reduce((products, cartItem) => {
             for (let i = 0; i < cartItem.quantity; i++) {
                 products.push(cartItem.item)
             }
             return products
         }, [])
-        console.log(products);
 
-        const response = await fetch('http://localhost:3000/api/products/order', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json;charset=UTF-8'
-            },
-            body: JSON.stringify({contact, products})
-         })
-        const result = await response.json()
-        console.log(result);
-        
-        const orderId = result.orderId
-        location.href=("href", "./confirmation.html?orderId=" + orderId)
-    }) 
-        
+
+        if (verifForm(contact)) {
+            form.querySelector('#firstNameErrorMsg').textContent = ''
+            const response = await fetch('http://localhost:3000/api/products/order', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify({ contact, products })
+            })
+            const result = await response.json()
+            console.log(result);
+
+            const orderId = result.orderId
+            location.href = ("href", "./confirmation.html?orderId=" + orderId)
+            localStorage.removeItem('panier')
+        }
+    })
+
 }
 main()
+
+function verifForm(contact) {
+    const form = document.querySelector('.cart__order__form')
+    let error = false
+    form.querySelector('#firstNameErrorMsg').textContent = ''
+    form.querySelector('#lastNameErrorMsg').textContent = ''
+    form.querySelector('#cityErrorMsg').textContent = ''
+    form.querySelector('#emailErrorMsg').textContent = ''
+    if (!/^[A-Za-z]+[ \-']?[[A-Za-z]+[ \-']?]*[a-z]+$/.test(contact.firstName)) {
+        form.querySelector('#firstNameErrorMsg').textContent = "Veuillez renseigner correctement votre Prénom"
+        error = true
+    }
+    if (!/^[A-Za-z]+[ \-']?[[A-Za-z]+[ \-']?]*[a-z]+$/.test(contact.lastName)) {
+        form.querySelector('#lastNameErrorMsg').textContent = "Veuillez renseigner correctement votre Nom"
+        error = true
+    }
+    if (!/^[A-Za-z]+[ \-']?[[A-Za-z]+[ \-']?]*[a-z]+$/.test(contact.city)) {
+        form.querySelector('#cityErrorMsg').textContent = "Veuillez renseigner correctement votre Ville"
+        error = true
+    }
+    if (!/^[a-zA-Z0-9.-_+]+@[a-zA-Z0-9.-_]+\.[a-z]{2,10}$/.test(contact.email)) {
+        form.querySelector('#emailErrorMsg').textContent = "Veuillez renseigner correctement votre Email"
+        error = true
+    }
+    return !error
+}
